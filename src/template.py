@@ -18,11 +18,11 @@ from src.utils.parsing import (
 
 
 class Template:
-    def __init__(self, template_path, tuning_config):
+    def __init__(self, template_path, tuning_config, json_object=None):
         self.path = template_path
         self.image_instance_ops = ImageInstanceOps(tuning_config)
 
-        json_object = open_template_with_defaults(template_path)
+        json_object = json_object or open_template_with_defaults(template_path)
         (
             custom_labels_object,
             field_blocks_object,

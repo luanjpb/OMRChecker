@@ -55,10 +55,24 @@ def open_config_with_defaults(config_path):
     return DotMap(user_tuning_config, _dynamic=False)
 
 
+def config_with_defaults_from_dict(user_tuning_config):
+    user_tuning_config = OVERRIDE_MERGER.merge(
+        deepcopy(CONFIG_DEFAULTS), user_tuning_config
+    )
+    validate_config_json(user_tuning_config, "config")
+    # https://github.com/drgrib/dotmap/issues/74
+    return DotMap(user_tuning_config, _dynamic=False)
+
 def open_template_with_defaults(template_path):
     user_template = load_json(template_path)
     user_template = OVERRIDE_MERGER.merge(deepcopy(TEMPLATE_DEFAULTS), user_template)
     validate_template_json(user_template, template_path)
+    return user_template
+
+
+def template_with_defaults_from_dict(user_template):
+    user_template = OVERRIDE_MERGER.merge(deepcopy(TEMPLATE_DEFAULTS), user_template)
+    validate_template_json(user_template, "template")
     return user_template
 
 
