@@ -17,11 +17,7 @@ def process_buffers(
 ):
     files_counter = 0
     
-    results = {
-        "errors": {},
-        "results": {},
-        "multi_marked": {}
-    }
+    results = []
 
     for buffer in buffers:
         files_counter += 1
@@ -36,11 +32,12 @@ def process_buffers(
         )
 
         if in_omr is None:
-            results["errors"][
-                file_name
-            ] = {
-                "error": "Não foi possível processar o arquivo."
-            }
+            results.append(
+                {
+                    "id": file_name,
+                    "status": "error"
+                }
+            )
             continue
 
         # uniquify
@@ -64,19 +61,23 @@ def process_buffers(
         Image.fromarray(final_marked).save(marked_image, format="JPEG")
 
         if multi_marked == 0:
-            results["results"][
-                file_name
-            ] = {
-                "marked_image": marked_image,
-                "answers": omr_response
-            }
+            results.append(
+                {
+                    "id": file_name,
+                    "status": "success",
+                    "marked_image": marked_image,
+                    "answers": omr_response
+                }
+            )
         else:
-            results["multi_marked"][
-                file_name
-            ] = {
-                "marked_image": marked_image,
-                "answers": omr_response
-            }
+            results.append(
+                {
+                    "id": file_name,
+                    "status": "multi_marked",
+                    "marked_image": marked_image,
+                    "answers": omr_response
+                }
+            )
 
     return results
 
